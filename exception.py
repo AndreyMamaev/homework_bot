@@ -6,7 +6,7 @@ class ApiAnswerError(Exception):
     pass
 
 
-class CheckResponseError(Exception):
+class CheckResponseError(TypeError):
     pass
 
 

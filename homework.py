@@ -58,7 +58,7 @@ def parse_status(homework):
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     if (homework_name and homework_status) is None:
-        raise HomeworkStatusError(
+        raise KeyError(
             'Отсутствует информация о названии или статусе работы'
         )
 
