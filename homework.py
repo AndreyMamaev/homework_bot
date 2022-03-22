@@ -6,8 +6,14 @@ from http import HTTPStatus
 import telegram
 import requests
 
-from config import *
-from exception import *
+from config import (
+    PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
+    RETRY_TIME, ENDPOINT, HEADERS, HOMEWORK_STATUSES
+)
+from exception import (
+    SendMessageError, ApiAnswerError, CheckResponseError,
+    HomeworkStatusError, CheckTokensError
+)
 
 
 def send_message(bot, message):
@@ -52,7 +58,9 @@ def parse_status(homework):
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     if (homework_name and homework_status) is None:
-        raise HomeworkStatusError(message)
+        raise HomeworkStatusError(
+            'Отсутствует информация о названии или статусе работы'
+        )
 
     if homework_status not in HOMEWORK_STATUSES:
         message = 'Недокументированный статус домашней работы, ',
