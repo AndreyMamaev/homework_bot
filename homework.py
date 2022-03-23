@@ -10,6 +10,7 @@ from config import (
     PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
     RETRY_TIME, ENDPOINT, HEADERS, HOMEWORK_STATUSES
 )
+
 from exception import (
     SendMessageError, ApiAnswerError, CheckResponseError,
     HomeworkStatusError, CheckTokensError
@@ -21,7 +22,7 @@ def send_message(bot, message):
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info('Удачная отправка сообщения')
-    except telegram.error.BadRequest:
+    except telegram.error.TelegramError:
         message = 'Неудачная отправка сообщения'
         logging.error(message)
         raise SendMessageError(message)
@@ -43,14 +44,14 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    if (isinstance(response, dict)) and (
-        isinstance(response.get('homeworks'), list)
+    if (
+        isinstance(response, dict)
+        and isinstance(response.get('homeworks'), list)
     ):
         return response.get('homeworks')
-    else:
-        message = 'Отсутствуют ожидаемые ключи в ответе API.'
-        logging.error(message)
-        raise CheckResponseError(message)
+    message = 'Отсутствуют ожидаемые ключи в ответе API.'
+    logging.error(message)
+    raise CheckResponseError(message)
 
 
 def parse_status(homework):
@@ -96,7 +97,7 @@ def main():
                     message = parse_status(homework)
                     send_message(bot, message)
 
-            current_timestamp = answer.get("current_date")
+            current_timestamp = answer.get('current_date', int(time.time()))
 
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
