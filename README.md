@@ -10,9 +10,9 @@ Telegram Bot API 13.7
 ```
 pip install -r requirements.txt
 ``` 
-- В папке с файлом manage.py выполните команду:
+- Выполните команду:
 ```
-python3 manage.py runserver
+python3 homework.py 
 ```
 ### Авторы
 Андрей Мамаев
